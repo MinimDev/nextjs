@@ -1,0 +1,51 @@
+Knex Migrate
+
+npm install knex
+npm install mysql/pg/etc
+
+pada package json script tambahkan 
+	"knex":"knex"
+
+untuk init knex file pada npm : npm run knex init
+	kemudian buka file knexfile.js kemudian isi connection dan clientnya 
+	contoh : 	client: 'mysql',
+				connection: {
+				  host : '127.0.0.1',
+				  port : 3306,
+				  user : 'nextjsfull',
+				  password : 'nextjsfull',
+				  database : 'fullstacknextjs'
+				}
+				
+untuk membuat file migrasi : npm run knex migrate:make namafilemigrasi(mis: create-table-post)
+	kemudian isi up untuk membuat migrasi baru dan down untuk rollback/delete migrasi
+	cont: 
+			exports.up = function(knex) {
+				return knex.schema.createTable('posts', function(table){
+					table.increments();
+					table.string('title');
+					table.text('content');
+					table.timestamp(true, true);
+				})
+			};
+
+			exports.down = function(knex) {
+			  return knex.schema.dropTable('posts');
+			};
+			
+untuk menjalankan migrasi tersebut : npm run knex migrasi:latest
+
+.env.local -> file env di nextjs yang langsung dibaca sebagai environtment variabel (dengan cara process.env.NAMA_ENV_VAR)
+
+--> Pada Knex tidak bisa membaca  file .env.local dikarenakan beda lingkup ruang yaitu berjalan di lingkup nextjs
+--> oleh karena itu kita dapat mengatasi dengan menggunakan lib dotenv-cli (npm install -g dotenv-cli)  https://www.npmjs.com/package/dotenv-cli
+--> selanjutnya pada package json di knex kita dapat membaca .env.local tersebut dengan menggunakan dotenv-cli : dotenv -e namaEnv(.env.local)
+
+###Git
+jika sudah ter init bisa di hapus dengan cara: rm -rf .git
+
+1. git init
+2. git remote add origin https://github.com/MinimDev/nextjs_fullstack.git
+3. git add .
+4. git commit -m "initial"
+5. git push origin master
